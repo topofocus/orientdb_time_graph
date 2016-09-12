@@ -2,6 +2,28 @@
 
 Simple Time Graph using ActiveOrient/OrientDB. 
 
+This Graph is realized
+
+```ruby
+Jahr -- [Month_of] -- Monat --[DAY_OF]-- Tag --[TIME_OF]-- Stunde
+```
+The nodes are crosslinked and one can easily access any point of the grid.
+
+The library provides »to_tg« additions to »Date«, »DateTime« and »String«. 
+Thus
+
+```ruby
+z = "22.3.2003".to_tg
+=> #<TG::Tag:0x000000030d79d0 @metadata={"type"=>"d", "class"=>"tag", "version"=>4, "fieldTypes"=>"in_grid_of=g,out_grid_of=g,in_day_of=g", "cluster"=>25, "record"=>294}, @d=nil, @attributes={"value"=>22, "in_grid_of"=>["#49:304"], "out_grid_of"=>["#50:304"], "in_day_of"=>["#41:294"], "created_at"=>Mon, 12 Sep 2016 09:56:41 +0200}> 
+z.datum 
+=> "22.3.2003" 
+( z + 3 ).datum
+=> "26.5.2003"
+z.environment( 5).datum
+ => ["18.5.2003", "19.5.2003", "20.5.2003", "21.5.2003", "22.5.2003", "23.5.2003", "24.5.2003", "25.5.2003", "26.5.2003", "27.5.2003", "28.5.2003"] 
+
+
+```
 *Prerequisites* : 
 * Install and setup OrientDB
 * Run "Bundle install" and "Bundle update"
@@ -29,12 +51,8 @@ The Database is automatically initialized and the following hierarchy is build:
 - - - stunde		      TG::Stunde
 - - - tag		      TG::Tag
 ```
-This Graph is realized
 
-```ruby
-Jahr -- [Month_of] -- Monat --[DAY_OF]-- Tag --[TIME_OF]-- Stunde
-```
-and populated by calling 
+The graph is populated by calling 
 
 ```ruby
 TG::TimeGraph.populate( a single year or a range )  # default: 1900 .. 2050

@@ -13,6 +13,25 @@ Examples
   end
 
 
+  def + item
+    move item
+  end
+  def - item
+    move -item
+  end
+    
+    def move count
+     dir =  count <0 ? 'in' : 'out' 
+     puts "Query: select from ( traverse #{dir}(\"grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth = #{count.abs}    "
+  
+     r= db.execute {  "select from ( traverse #{dir}(\"grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth = #{count.abs} " }  
+     if r.size == 1
+       r.first
+     else
+       nil
+     end
+  end
+
   def analyse_key key
 
     new_key=  if key.first.is_a?(Range) 

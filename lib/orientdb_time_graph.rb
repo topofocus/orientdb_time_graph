@@ -1,5 +1,7 @@
 require 'active-orient'
 require_relative 'time_graph.rb'
+require_relative 'support.rb'
+
 require_relative '../config/init_db'
 
 
