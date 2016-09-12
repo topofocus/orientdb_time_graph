@@ -1,8 +1,9 @@
 source "https://rubygems.org"
 #gemspec
-gem 'orientdb' , :path => '/home/topo/orientdb-jruby' , :platforms => :jruby
-## change here to the location of ActiveOrient
-gem 'active-orient' , :path => '/home/topo/activeorient'
+## jruby support is experimental, not tested jet
+gem 'orientdb' , :git => 'git://github.com/topofocus/orientdb-jruby.git' , :platforms => :jruby
+ 
+gem 'active-orient' , :git => 'git://github.com/topofocus/active-orient.git'
 
 
 group :development, :test do
