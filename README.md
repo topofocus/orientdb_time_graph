@@ -1,13 +1,13 @@
-# Time Graph
+# Time Graph 
 
-The bin-directory contains a customized console-application. 
-Any libraries are included and one can start exploring the features immediately.
+Simple Time Graph using ActiveOrient/OrientDB. 
 
 *Prerequisites* : 
+* Install and setup OrientDB
 * Run "Bundle install" and "Bundle update"
 * customize config/connect.yml
 
-**or** start a new project and include the gem in sthe usual manner.
+**or** start a new project and include the gem in the usual manner.
 
 To play around, start the console by
 ```
@@ -39,7 +39,7 @@ and populated by calling
 ```ruby
 TG::TimeGraph.populate( a single year or a range )  # default: 1900 .. 2050
 ```
-If only on year is specified, a Monat--Tag--Stunde-Grid is build, otherwise a Jahr--Monat--Tag one.
+If only one year is specified, a Monat--Tag--Stunde-Grid is build, otherwise a Jahr--Monat--Tag one.
 You can check the Status by calling 
 
 ```ruby
