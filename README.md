@@ -24,8 +24,11 @@ z.environment( 5).datum
 
 
 ```
+(datum is a method of TG::Day)
+
 *Prerequisites* : 
-* Install and setup OrientDB
+* Ruby 2.3 and OrientDB 2.2
+* Install and setup ruby via RVM (rvm.io) OrientDB 
 * Run "Bundle install" and "Bundle update"
 * customize config/connect.yml
 
