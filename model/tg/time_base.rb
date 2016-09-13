@@ -37,7 +37,7 @@ i.e.
   end
     
 =begin
-Moves vertically within the grid
+Moves horizontally within the grid
 i.e
   the_day =  "4.8.2000".to_tg
   the_day.move(9).datum  # => "13.8.2000" 
@@ -54,7 +54,7 @@ i.e
   end
 
 
-  def analyse_key key
+  def analyse_key key    # :nodoc:
 
     new_key=  if key.first.is_a?(Range) 
 			   key.first
@@ -64,6 +64,23 @@ i.e
 			  key
 			end
   end
+=begin
+Get the nearest horizontal neighbours
+
+Takes one or two parameters. 
+
+  (TG::TimeBase.instance).environment: count_of_previous_nodes, count_of_future_nodes
+
+Default: return the previous and next 10 items
+
+   "22.4.1967".to_tg.environment.datum
+    => ["12.4.1967", "13.4.1967", "14.4.1967", "15.4.1967", "16.4.1967", "17.4.1967", "18.4.1967", "19.4.1967", "20.4.1967", "21.4.1967", "22.4.1967", "23.4.1967", "24.4.1967", "25.4.1967", "26.4.1967", "27.4.1967", "28.4.1967", "29.4.1967", "30.4.1967", "1.5.1967", "2.5.1967"]
+
+It returns an array of TG::TimeBase-Objects
+
+
+
+=end
 
   def environment previous_items = 10, next_items = nil
     next_items =  previous_items  if next_items.nil?  # default : symmetric fetching
@@ -75,4 +92,21 @@ i.e
 
     prev_result.reverse  << self | next_result 
   end
+
+=begin
+Wrapper for 
+  Edge.create in: self, out: a_vertex, attributes: { some_attributes on the edge }
+
+  reloads the vertex after the assignment.
+=end
+
+  def assign vertex: , through: E , attributes: {}
+
+    through.create from: self, to: vertex, attributes: attributes
+    
+    self.attributes = db.get_record( rid).attributes
+
+  end
+
+
 end

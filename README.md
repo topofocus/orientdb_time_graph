@@ -34,21 +34,21 @@ z.environment( 5).datum
 To play around, start the console by
 ```
   cd bin
-  ./active-orient-console t  # test-modus
+  ./console t  # test-modus
 ```
 The Database is automatically initialized and the following hierarchy is build:
 
 ```ruby
 - E				# ruby-class
-- - month_of		      TG::MONTH_OF
+- - month_of	    TG::MONTH_OF
 - - day_of		      TG::DAY_OF
 - - time_of		      TG::TIME_OF
 - - grid_of		      TG::GRID_OF
 - V
-- - time_base		      TG::TimeBase
+- - time_base	    TG::TimeBase
 - - - jahr		      TG::Jahr
 - - - monat		      TG::Monat
-- - - stunde		      TG::Stunde
+- - - stunde	      TG::Stunde
 - - - tag		      TG::Tag
 ```
 
@@ -57,8 +57,11 @@ The graph is populated by calling
 ```ruby
 TG::TimeGraph.populate( a single year or a range )  # default: 1900 .. 2050
 ```
+(restart the console after this and check if all classes are assigned)
+
 If only one year is specified, a Monat--Tag--Stunde-Grid is build, otherwise a Jahr--Monat--Tag one.
 You can check the Status by calling 
+
 
 ```ruby
 TG::TimeGraph.populate 2000 -2003
@@ -140,15 +143,34 @@ start.environment(0,3).datum
  => ["7.4.2000", "8.4.2000", "9.4.2000", "10.4.2000"] 
 ```
 
+## Assigning Events
 
+To assign something to the TimeGrid one has just to create an edge-class and connect this »something», 
+which is represented as Vertex to the grid. The Diary example below describes how to do it from
+the viewpoint of the edge.
 
+However, if you want to assign something like a csv with a »date« column, it's easier to assin it directly 
+to the grid:
+
+  # csv record 
+  Ticker,Date/Time,Open,High,Low,Close,Volume,Open Interest,
+  ^GSPTSE,09.09.2016,14717.23,14717.23,14502.90,14540.00,202109040,0
+
+assuming the record is read as string, then assigning is straightforward:
+  
+  ticker, date, open, high, low, close, volume = record.split(',')
+  date.to_tg.assign vertex: Ticker.new(  high: high, ..), through: OHLC_TO, attribute:{ symbol: ticker }
+
+The updated TimeBase-Object is returned. 
+
+»OHLC_TO« is the edge-class and »Ticker« represents a vertex-class
 ## Diary
 
 lets create a simple diary
 
 ```ruby
 include TG
-TimeiGraph.populate 2016
+TimeGraph.populate 2016
 ORD.create_vertex_class :termin
  => Termin
 ORD.create_edge_class   :date_of
@@ -169,6 +191,8 @@ DATE_OF.create from: Monat[8].tag(10 .. 21).stunde( 9 ), to: Termin.create( :sho
 t = Termin.where short: 'Frühstück'
 t.in_date_of.out.first.datum
   => ["10.8.2016 9:00", "11.8.2016 9:00", "12.8.2016 9:00", "13.8.2016 9:00", "14.8.2016 9:00", "15.8.2016 9:00", "16.8.2016 9:00", "17.8.2016 9:00", "18.8.2016 9:00", "19.8.2016 9:00", "20.8.2016 9:00", "21.8.2016 9:00"]
+
+
 
 ```
 
