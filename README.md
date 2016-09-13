@@ -24,8 +24,11 @@ z.environment( 5).datum
 
 
 ```
+(datum is a method of TG::Day)
+
 *Prerequisites* : 
-* Install and setup OrientDB
+* Ruby 2.3 and OrientDB 2.2
+* Install and setup ruby via RVM (rvm.io) OrientDB 
 * Run "Bundle install" and "Bundle update"
 * customize config/connect.yml
 
@@ -40,7 +43,7 @@ The Database is automatically initialized and the following hierarchy is build:
 
 ```ruby
 - E				# ruby-class
-- - month_of	    TG::MONTH_OF
+- - month_of	      TG::MONTH_OF
 - - day_of		      TG::DAY_OF
 - - time_of		      TG::TIME_OF
 - - grid_of		      TG::GRID_OF
@@ -152,15 +155,16 @@ the viewpoint of the edge.
 However, if you want to assign something like a csv with a »date« column, it's easier to assin it directly 
 to the grid:
 
+``` ruby
   # csv record 
   Ticker,Date/Time,Open,High,Low,Close,Volume,Open Interest,
   ^GSPTSE,09.09.2016,14717.23,14717.23,14502.90,14540.00,202109040,0
-
+```
 assuming the record is read as string, then assigning is straightforward:
-  
-  ticker, date, open, high, low, close, volume = record.split(',')
-  date.to_tg.assign vertex: Ticker.new(  high: high, ..), through: OHLC_TO, attribute:{ symbol: ticker }
-
+``` ruby
+  ticker, date, open, high, low, close, volume, oi = record.split(',')
+  date.to_tg.assign vertex: Ticker.new(  high: high, ..), through: OHLC_TO, attributes:{ symbol: ticker }
+``` 
 The updated TimeBase-Object is returned. 
 
 »OHLC_TO« is the edge-class and »Ticker« represents a vertex-class
