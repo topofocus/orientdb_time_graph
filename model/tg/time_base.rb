@@ -12,25 +12,47 @@ Examples
     result.size == 1 ? result.first : result # return object if only one record is fetched
   end
 
+=begin
+Get the node (item) grids in the future
 
+i.e.
+  the_month =  TG::Jahr[2000].monat(8).pop
+  the_month.value  # -> 8
+  future_month = the_month + 6
+  future_month.value # -> 2
+=end
   def + item
     move item
   end
+=begin
+Get the node (item) grids in the past
+
+i.e.
+  the_day =  "4.8.2000".to_tg
+  past_day = the_day - 6
+  past_day.datum #  => "29.7.2000"
+=end
   def - item
     move -item
   end
     
-    def move count
-     dir =  count <0 ? 'in' : 'out' 
-     puts "Query: select from ( traverse #{dir}(\"grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth = #{count.abs}    "
-  
-     r= db.execute {  "select from ( traverse #{dir}(\"grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth = #{count.abs} " }  
-     if r.size == 1
-       r.first
-     else
-       nil
-     end
+=begin
+Moves vertically within the grid
+i.e
+  the_day =  "4.8.2000".to_tg
+  the_day.move(9).datum  # => "13.8.2000" 
+  the_day.move(-9).datum # => "26.7.2000"
+=end
+  def move count
+    dir =  count <0 ? 'in' : 'out' 
+    r= db.execute {  "select from ( traverse #{dir}(\"grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth = #{count.abs} " }  
+    if r.size == 1
+      r.first
+    else
+      nil
+    end
   end
+
 
   def analyse_key key
 

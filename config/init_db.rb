@@ -14,28 +14,25 @@ module TG
 
       delete_class = -> (c,d) do 
 	the_class = ActiveOrient::Model.orientdb_class( name: c, superclass: d)
-	logger.info{  "The Class: "+the_class.to_s }
+	logger.info{  "The Class: "+the_class.to_s+ " removed from Database" }
 	the_class.delete_class
       end
       if defined?(TimeBase)
-	logger.info{ "  Deleting Class and Classdefinitions" }
 	vertexes.each{|v| delete_class[ v, :time_base ]}
 	delete_class[ :time_base, :V ] 
 	edges.each{|e| delete_class[ e, :E ] }
       end
 
       logger.info{ "  Creating Classes " }
-  dI.create_classes 'E', 'V'
-  #E.ref_name = 'E'
-  #V.ref_name = 'V'
+      dI.create_classes 'E', 'V'
       #ActiveOrient::Init.vertex_and_egde_class
       dI.create_vertex_class :time_base		      # --> TimeBase
       # hour, day: month cannot be alloacated, because Day is a class of DateTime and thus reserved
       time_base_classes = dI.create_classes( :stunde, :tag, :monat, :jahr ){ TimeBase } # --> Hour, Day, Month
-      TimeBase.create_property :value_string, type: :string  
       TimeBase.create_property :value, type:  :integer 						
-      ## this puts an uniqe index on child-classes
-      #time_base_classes.each{|y| y.create_index :value }
+      #
+      ## this puts an  index on child-classes
+      time_base_classes.each{|c| c.create_index c.ref_name+'_value_idx' , type: :notunique, on: :value }
       
       # modified naming-convention in  model/e.rb
       edges = dI.create_edge_class :time_of, :day_of, :month_of, :grid_of	     # --> TIME_OF, :DAY_OF
