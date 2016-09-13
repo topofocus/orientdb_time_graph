@@ -5,12 +5,15 @@ module TG
   module Setup
     def self.init_database database_instance
       dI = database_instance
+      stored_namespace =  ActiveOrient::Model.namespace
       ActiveOrient::Init.define_namespace { TG }
-      (logger= ActiveOrient::Base.logger).progname= 'OrientSetup#InitDatabase'
-      vertexes =  dI.class_hierarchy base_class: 'time_base'
+      (logger= ActiveOrient::OrientDB.logger).progname= 'TG::Setup#InitDatabase'
 						# because edges are not resolved because of the namingconvention
-      edges = dI.class_hierarchy base_class: 'E'
-      logger.info{ " preallocated-database-classes: #{dI.database_classes.join(" , ")} " }
+      tg_edges =  [  :time_of, :day_of, :month_of, :grid_of ]	
+      time_base_vertices =  [  :stunde, :tag, :monat, :jahr  ]
+      edges = dI.class_hierarchy( base_class: 'E') & tg_edges.map( &:to_s )
+      vertices =  dI.class_hierarchy( base_class: 'time_base' ) & time_base_vertices.map( &:to_s )
+      logger.info{ "affected-database-classes: \n #{ (vertices + edges).join(', ')}"  }
 
       delete_class = -> (c,d) do 
 	the_class = ActiveOrient::Model.orientdb_class( name: c, superclass: d)
@@ -18,27 +21,32 @@ module TG
 	the_class.delete_class
       end
       if defined?(TimeBase)
-	vertexes.each{|v| delete_class[ v, :time_base ]}
+	vertices.each{|v| delete_class[ v, :time_base ] }
 	delete_class[ :time_base, :V ] 
 	edges.each{|e| delete_class[ e, :E ] }
       end
 
+      logger.progname= 'TG::Setup#InitDatabase'
+      cleared_database = dI.database_classes 
       logger.info{ "  Creating Classes " }
       dI.create_classes 'E', 'V'
       #ActiveOrient::Init.vertex_and_egde_class
       dI.create_vertex_class :time_base		      # --> TimeBase
-      # hour, day: month cannot be alloacated, because Day is a class of DateTime and thus reserved
-      time_base_classes = dI.create_classes( :stunde, :tag, :monat, :jahr ){ TimeBase } # --> Hour, Day, Month
+      # hour, day: month cannot be alloacated, because Day is a class of DateTime and thus is reserved
+      time_base_classes = dI.create_classes( *time_base_vertices ){ TimeBase } # --> Hour, Day, Month
       TimeBase.create_property :value, type:  :integer 						
       #
       ## this puts an  index on child-classes
       time_base_classes.each{|c| c.create_index c.ref_name+'_value_idx' , type: :notunique, on: :value }
       
       # modified naming-convention in  model/e.rb
-      edges = dI.create_edge_class :time_of, :day_of, :month_of, :grid_of	     # --> TIME_OF, :DAY_OF
+      edges = dI.create_edge_class  *tg_edges   # --> TIME_OF, :DAY_OF
       edges.each &:uniq_index
 
-      dI.database_classes  # return_value
+      # restore namespace
+      ActiveOrient::Init.define_namespace { stored_namespace }
+
+      dI.database_classes - cleared_database  # return_value
     end
   end
 end
