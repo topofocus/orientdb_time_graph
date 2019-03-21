@@ -2,7 +2,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |s|
-  s.name        = "orientdb_time_graph"
+  s.name        = "orientdb-time-graph"
   s.version	= File.open('VERSION').read.strip
   s.authors     = ["Hartmut Bischoff"]
   s.email       = ["topofocus@gmail.com"]

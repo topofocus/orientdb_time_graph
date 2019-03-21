@@ -1,5 +1,5 @@
 #ActiveOrient::Model.orientdb_class name: 'time_base', superclass: 'V'
-class  TG::Tag  < TG::TimeBase
+class  TG::Tag # < TG::TimeBase
 def monat
   in_day_of.out.value_string.first
 end

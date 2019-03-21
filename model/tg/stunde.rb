@@ -1,4 +1,4 @@
-class TG::Stunde < TG::TimeBase
+class TG::Stunde # < TG::TimeBase
 
   def tag
     in_time_of.out

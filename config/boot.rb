@@ -36,7 +36,6 @@ puts "Using #{env}-environment"
 
 
 # lib/init.rb
-ActiveOrient::Init.define_namespace { TG }
 
 ActiveOrient::Model.model_dir =  "#{project_root}/#{ configyml.present? ? configyml[:model_dir] : "model" }"
 puts "BOOT--> Project-Root:  #{project_root}"
@@ -69,24 +68,25 @@ ActiveOrient::Model.logger =  logger
 ActiveOrient::OrientDB.logger =  logger
 if connectyml.present? and connectyml[:user].present? and connectyml[:pass].present?
   ActiveOrient.default_server= { user: connectyml[:user], password: connectyml[:pass] ,
-				 server: 'localhost', port: 2480  }
+				 server: '172.28.50.25', port: 2480  }
   ActiveOrient.database = databaseyml[env.to_sym]
-
+	ActiveOrient::Init.define_namespace  namespace: :object  
   ## Include customized NamingConvention for Edges
-  ActiveOrient::Model.orientdb_class name:"E"
-  ActiveOrient::Model.orientdb_class name:"V"
-  class E #< ActiveOrient::Model
+  ORD = ActiveOrient::OrientDB.new  preallocate: true 
+  ORD.create_class 'E'
+	ORD.create_class 'V'
+  class E < ActiveOrient::Model
       def self.naming_convention name=nil
           name.present? ? name.upcase : ref_name.upcase
       end
   end
 
-#  Alternativly one can call
-#  TG.set_defaults
-#  TG.connect
+  TG.connect
+
+  # load any unallocated database class, even it there is no model-file present
+  ActiveOrient::Model.keep_models_without_file = true
 
 
-  ORD = ActiveOrient::OrientDB.new  preallocate: true 
   if RUBY_PLATFORM == 'java'
     DB =  ActiveOrient::API.new   preallocate: false
   else
@@ -94,7 +94,7 @@ if connectyml.present? and connectyml[:user].present? and connectyml[:pass].pres
   end
 
 else
-  ActiveOrient::Base.logger = Logger.new('/dev/stdout')
+  ActiveOrient::OrientDB.logger = Logger.new('/dev/stdout')
   ActiveOrient::OrientDB.logger.error{ "config/connectyml is  misconfigurated" }
   ActiveOrient::OrientDB.logger.error{ "Database Server is NOT available"} 
 end

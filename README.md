@@ -27,20 +27,33 @@ z.environment( 5).datum
 (datum is a method of TG::Day)
 
 *Prerequisites* : 
-* Ruby 2.3 and OrientDB 2.2
+* Ruby 2.5 (or 2.6) and OrientDB 3.0
 * Install and setup ruby via RVM (rvm.io) OrientDB 
 * Run "Bundle install" and "Bundle update"
 * customize config/connect.yml
 
-**or** start a new project and include the gem in the usual manner.
+**or** start a new project and require the gem in the usual manner.
+
+then Edges must be configurated with the following capitalising naming-convention
+```ruby
+class E
+      def self.naming_convention name=nil
+          name.present? ? name.upcase : ref_name.upcase
+      end
+end
+```
+* Initialize the data-structure by `TG::Setup.init_database »OrientDB Database instance«`  (eg. ORD)
+* After restarting the application, populate the timegraph by `TG::TimeGraph.populate 2015..2030`
+* In your Script activate the timegraph through `TG.connect`
 
 To play around, start the console by
 ```
   cd bin
   ./console t  # test-modus
 ```
-The Database is automatically initialized and the following hierarchy is build:
+call   `TG::Init_database`  and restart the console
 
+The following database classes are build
 ```ruby
 - E				# ruby-class
 - - month_of	      TG::MONTH_OF
@@ -67,7 +80,7 @@ You can check the Status by calling
 
 
 ```ruby
-TG::TimeGraph.populate 2000 -2003
+TG::TimeGraph.populate 2000..2003
 TG.info
 -------------- TIME GRAPH ------------------
 Allocated Years : 

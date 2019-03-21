@@ -1,3 +1,3 @@
-class  TG::DAY_OF  < E
+class  TG::DAY_OF  
 
 end

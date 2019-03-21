@@ -1,3 +1,3 @@
-class  TG::GRID_OF  < E
+class  TG::GRID_OF  
 
 end

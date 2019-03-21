@@ -1,5 +1,5 @@
 
-class TG::Jahr  < TG::TimeBase
+class TG::Jahr #< TG::TimeBase
   def der_monat m
     d >0 && m<13 ? out_month_of[m].in : nil
   end

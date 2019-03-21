@@ -1,4 +1,4 @@
-class  TG::TimeBase < V
+class  TG::TimeBase # < V
 
 =begin
 Searches for specific value records 
