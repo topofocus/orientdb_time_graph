@@ -29,7 +29,7 @@ z.environment( 5).datum
 *Prerequisites* : 
 * Ruby 2.5 (or 2.6) and OrientDB 3.0
 * Install and setup ruby via RVM (rvm.io) OrientDB 
-* Run "Bundle install" and "Bundle update"
+* Run "bundle install" and "bundle update"
 * customize config/connect.yml
 
 **or** start a new project and require the gem in the usual manner.
