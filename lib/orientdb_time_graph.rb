@@ -49,7 +49,7 @@ module TG
   def self.info 
     puts "-------------- TIME GRAPH ------------------"
     puts "Allocated Years : "
-    puts TG::Jahr.all.value.sort.join('; ')
+    puts TG::Jahr.all.map(&:value).sort.join('; ')
     puts ""
     puts "Type: #{TG::Stunde.all.empty? ? "Date-Graph" : "DateTime-Graph"}"
     puts ""

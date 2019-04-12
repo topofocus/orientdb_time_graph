@@ -12,7 +12,7 @@ module TG
 			tg_edges =  [  :time_of, :day_of, :month_of, :grid_of ]	
 			time_base_vertices =  [  :stunde, :tag, :monat, :jahr  ]
 			edges = dI.class_hierarchy( base_class: 'E') & tg_edges.map( &:to_s )
-			vertices =  dI.class_hierarchy( base_class: 'time_base' ) & time_base_vertices.map( &:to_s )
+			vertices =  dI.class_hierarchy( base_class: 'tg_time_base' ) & time_base_vertices.map( &:to_s )
 			logger.info{ "affected-database-classes: \n #{ (vertices + edges).join(', ')}"  }
 
 			delete_class = -> (c,d) do 
@@ -21,9 +21,8 @@ module TG
 				the_class.delete_class
 			end
 			if defined?(TimeBase)
-				vertices.each{|v| delete_class[ v, :time_base ] }
-				delete_class[ :time_base, :V ] 
-				edges.each{|e| delete_class[ e, :E ] }
+				vertices.each{|v| delete_class[ v, :tg_time_base ] }
+				delete_class[ :tg_time_base, :V ] 
 			end
 
       logger.progname= 'TG::Setup#InitDatabase'

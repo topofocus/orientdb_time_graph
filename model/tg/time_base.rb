@@ -8,8 +8,12 @@ Examples
   Jahr[1930 .. 1945]
 =end
   def self.[] *key
-    result = OrientSupport::Array.new( work_on: self, work_with: db.execute{ "select from #{ref_name} #{db.compose_where( value: key.analyse)}" } )
-    result.size == 1 ? result.first : result # return object if only one record is fetched
+#    result = OrientSupport::Array.new( work_on: self, 
+#						work_with: db.execute{ "select from #{ref_name} #{db.compose_where( value: key.analyse)}" } )
+ 
+		q= OrientSupport::OrientQuery.new where:{ value: key.analyse }
+		result= query_database q
+		result.size == 1 ? result.first : result # return object if only one record is fetched
   end
 
 =begin
@@ -45,7 +49,7 @@ i.e
 =end
   def move count
     dir =  count <0 ? 'in' : 'out' 
-    r= db.execute {  "select from ( traverse #{dir}(\"grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth = #{count.abs} " }  
+    r= db.execute {  "select from ( traverse #{dir}(\"tg_grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth = #{count.abs} " }  
     if r.size == 1
       r.first
     else
@@ -85,7 +89,7 @@ It returns an array of TG::TimeBase-Objects
   def environment previous_items = 10, next_items = nil
     next_items =  previous_items  if next_items.nil?  # default : symmetric fetching
 
-    my_query =  -> (count) { dir =  count <0 ? 'in' : 'out';   db.execute {  "select from ( traverse #{dir}(\"grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth >=1 " } }  # don't fetch self
+    my_query =  -> (count) { dir =  count <0 ? 'in' : 'out';   db.execute {  "select from ( traverse #{dir}(\"tg_grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth >=1 " } }  # don't fetch self
     
    prev_result = previous_items.zero? ?  []  :  my_query[ -previous_items ] 
    next_result = next_items.zero? ?  []  : my_query[ next_items ] 

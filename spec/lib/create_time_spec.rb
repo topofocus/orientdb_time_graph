@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rest_helper'
 
-describe CreateTime do
+describe TimeGraph do
   before( :all ) do
     reset_database 
     ActiveOrient::OrientSetup.init_database 

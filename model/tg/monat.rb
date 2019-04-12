@@ -1,7 +1,7 @@
 class TG::Monat # < TG::TimeBase
   def der_tag d
 #    d=d-1
-    d >0 && d<31 ? out_day_of[d].in : nil
+    d >0 && d<31 ? out_tg_day_of[d].in : nil
   end
  
   # returns an array of days
@@ -9,9 +9,10 @@ class TG::Monat # < TG::TimeBase
   #   Monat[9].tag[9]
   def tag *key
     if key.empty?
-    out_day_of.in
+    out_tg_day_of.in
     else
-    query( "select  expand (out_day_of.in[#{db.generate_sql_list 'value' => key.analyse}]) from #{rrid}  ")
+#			out_tg_day_of.in
+    query( "select  expand (out_tg_day_of.in[#{db.generate_sql_list 'value' => key.analyse}]) from #{rrid}  ")
     end
   end
 
@@ -20,6 +21,6 @@ class TG::Monat # < TG::TimeBase
   #
   
   def jahr
-    in_month_of.out.first
+    in_tg_month_of.out.first
   end
 end

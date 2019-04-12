@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = 'Implementation of a time graph in active.orient'
   s.description = '' 
   s.platform	= Gem::Platform::RUBY
-  s.required_ruby_version = '>= 2.2.5'
+  s.required_ruby_version = '>= 2.5'
   s.date 	= Time.now.strftime "%Y-%m-%d"
   s.test_files  = `git ls-files -- {spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
   s.executables   = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
    
   s.add_development_dependency "bundler", "~> 1.8"
-  s.add_dependency 'active-orient', "~> 0.5"
+  s.add_dependency 'active-orient', "~> 0.6"
 
 end
