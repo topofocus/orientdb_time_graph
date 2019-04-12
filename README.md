@@ -5,7 +5,7 @@ Simple Time Graph using ActiveOrient/OrientDB.
 This Graph is realized
 
 ```ruby
-Jahr -- [Month_of] -- Monat --[DAY_OF]-- Tag --[TIME_OF]-- Stunde
+Jahr -- [MONTH_OF] -- Monat --[DAY_OF]-- Tag --[TIME_OF]-- Stunde
 ```
 The nodes are crosslinked and one can easily access any point of the grid.
 
