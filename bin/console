@@ -5,7 +5,7 @@
 ##	       development (d)  [default]
 ##	       test (t)
 require 'logger'
-LogLevel = Logger::WARN
+LogLevel = Logger::INFO
 require File.expand_path(File.dirname(__FILE__) + "/../config/boot")
 
 #TG.check_and_initialize ORD

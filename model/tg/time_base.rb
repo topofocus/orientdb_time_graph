@@ -17,30 +17,6 @@ Examples
   end
 
 =begin
-Get the node (item) grids in the future
-
-i.e.
-  the_month =  TG::Jahr[2000].monat(8).pop
-  the_month.value  # -> 8
-  future_month = the_month + 6
-  future_month.value # -> 2
-=end
-  def + item
-    move item
-  end
-=begin
-Get the node (item) grids in the past
-
-i.e.
-  the_day =  "4.8.2000".to_tg
-  past_day = the_day - 6
-  past_day.datum #  => "29.7.2000"
-=end
-  def - item
-    move -item
-  end
-    
-=begin
 Moves horizontally within the grid
 i.e
   the_day =  "4.8.2000".to_tg
@@ -89,26 +65,14 @@ It returns an array of TG::TimeBase-Objects
   def environment previous_items = 10, next_items = nil
     next_items =  previous_items  if next_items.nil?  # default : symmetric fetching
 
-    my_query =  -> (count) { dir =  count <0 ? 'in' : 'out';   db.execute {  "select from ( traverse #{dir}(\"tg_grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth >=1 " } }  # don't fetch self
-    
-   prev_result = previous_items.zero? ?  []  :  my_query[ -previous_items ] 
-   next_result = next_items.zero? ?  []  : my_query[ next_items ] 
-
-    prev_result.reverse  << self | next_result 
-  end
-
-=begin
-Wrapper for 
-  Edge.create in: self, out: a_vertex, attributes: { some_attributes on the edge }
-
-  reloads the vertex after the assignment.
-=end
-
-  def assign vertex: , through: E , attributes: {}
-
-    through.create from: self, to: vertex, attributes: attributes
-    
-    self.attributes = db.get_record( rid).attributes
+    my_query =  -> (count) do
+			dir =  count <0 ? 'in' : 'out'   
+			db.execute {  "select from ( traverse #{dir}(\"tg_grid_of\") from #{rrid} while $depth <= #{count.abs}) where $depth >=1 " }   # don't fetch self and return an Array
+		end
+   prev_result = previous_items.zero? ?  []  :  my_query[ -previous_items.abs ] 
+   next_result = next_items.zero? ?  []  : my_query[ next_items.abs ] 
+   # return a collection suitable for further operations
+   OrientSupport::Array.new work_on: self, work_with: (prev_result.reverse <<  self  | next_result )
 
   end
 
