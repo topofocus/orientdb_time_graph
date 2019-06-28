@@ -178,7 +178,7 @@ to the grid:
 assuming the record is read as string, then assigning is straightforward:
 ``` ruby
   ticker, date, open, high, low, close, volume, oi = record.split(',')
-  date.to_tg.assign vertex: Ticker.new(  high: high, ..), through: OHLC_TO, attributes:{ symbol: ticker }
+  date.to_tg.assign vertex: Ticker.new(  high: high, ..), via: OHLC_TO, attributes:{ symbol: ticker }
 ``` 
 The updated TimeBase-Object is returned. 
 
