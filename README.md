@@ -36,7 +36,7 @@ z.environment( 5).datum
 
 **or** start a new project and require the gem in the usual manner.
 
-then Edges must be configurated with the following capitalising naming-convention
+Edges must be configurated with the following capitalising naming-convention
 ```ruby
 class E
       def self.naming_convention name=nil
