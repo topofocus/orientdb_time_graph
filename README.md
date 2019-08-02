@@ -150,7 +150,7 @@ On the TG::TimeBase-Level a method »environment« is implemented, that gathers 
 via traverse.
 
 ``` ruby
-start =  TG::Jahr[2000].monat(4).tag(7).first.first
+start =  "7.4.2000".to_tg
 start.environment(3).datum
  => ["4.4.2000", "5.4.2000", "6.4.2000", "7.4.2000", "8.4.2000", "9.4.2000", "10.4.2000"] 
 
