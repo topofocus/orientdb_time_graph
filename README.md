@@ -190,18 +190,18 @@ lets create a simple diary
 ```ruby
 include TG
 TimeGraph.populate 2016
-ORD.create_vertex_class :termin
+V.create_class :termin
  => Termin
-ORD.create_edge_class   :date_of
+E.create_class   :date_of
  => DATE_OF
 DATE_OF.uniq_index	# put contrains to the edge-class, accept only one entry per item 
 
-DATE_OF.create from: Monat[8].tag(9).stunde(12), 
-	       to: Termin.create( short: 'Mittagessen', 
-				  long: 'Schweinshaxen essen mit Lieschen Müller', 
-				  location: 'Hofbauhaus, München' )
+Monat[8].tag(9).stunde(12).assign vertex: Termin.create( short: 'Mittagessen', 
+			                         	 long: 'Schweinshaxen essen mit Lieschen Müller', 
+				                         location: 'Hofbauhaus, München' ),
+				  via: DATE_OF
  => #<DATE_OF:0x0000000334e038 (..) @attributes={"out"=>"#21:57", "in"=>"#41:0", (..)}> 
-# create some regular events
+# create some regular events  using Edge.create 
 # attach breakfirst at 9 o clock from the 10th to the 21st Day in the current month
 DATE_OF.create from: Monat[8].tag(10 .. 21).stunde( 9 ), to: Termin.create( :short => 'Frühstück' )
  => #<DATE_OF:0x000000028d5688 @metadata={(..) "cluster"=>45, "record"=>8}, 
