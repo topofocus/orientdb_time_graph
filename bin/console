@@ -29,6 +29,12 @@ env =  case specified_environment[-1].upcase
 module TG; end
 TG.setup env
 
+	ActiveOrient::Init.define_namespace  namespace: :object 
+	ActiveOrient::Model.keep_models_without_file = true
+	ActiveOrient::Model.keep_models_without_file = true
+	ActiveOrient::OrientDB.new  preallocate: true 
+
+
 #TG.check_and_initialize ORD
   
  #require 'orientdb' if RUBY_PLATFORM == 'java'

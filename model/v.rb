@@ -17,6 +17,48 @@ class V
   def prev
 		nodes( :in, via: /grid/ , expand: true).first
   end
+
+		# simplified and specialized form of traverse
+		#
+		# we follow the graph (Direction: out) 
+		#
+		#    start = "1.1.2000".to_tg.nodes( via: /temp/ ).first 
+    #    or
+  	#    start = the_asset.at("1.1.2000")
+  	#    
+		#    start.vector(10) 
+	  #   
+	 #		start.vector(10, to_time_grid: 2.week.since(start.datum))
+	  #
+		#    start.vector(10, function: :median){"mean" } 
+		#
+		# with 
+		#  function: one of 'eval, min, max, sum abs, decimal, avg, count,mode, median, percentil, variance, stddev'
+		# and a block, specifying the  property to work with
+		#
+		def vector  length, where: nil, function: nil,  start_at: 0
+		  dir =  length <0 ? :in : :out ;
+			the_vector_query = traverse dir, via: /grid/, depth: length.abs, where: where, execute: false 
+#			the_vector_query.while "inE('ml_has_ohlc').out != #{to_tg.rrid}  " if to_tg.present?  future use
+			t=  OrientSupport::OrientQuery.new from: the_vector_query
+			t.where "$depth >= #{start_at}"	
+			if block_given?
+				if function.present? 
+					t.projection( "#{function}(#{yield})")
+					t.execute{ |result| result.to_a.flatten.last}.first
+				else
+					t.projection yield
+					t.execute{ |result| result.to_a.flatten.last}.compact
+				end
+			else
+				t.execute
+			end
+		end
+
+
+
+
+
 =begin
 Moves horizontally within the grid
 i.e
