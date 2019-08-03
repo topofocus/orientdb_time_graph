@@ -36,7 +36,7 @@ z.environment( 5).datum
 
 **or** start a new project and require the gem in the usual manner.
 
-then Edges must be configurated with the following capitalising naming-convention
+Edges must be configurated with the following capitalising naming-convention
 ```ruby
 class E
       def self.naming_convention name=nil
@@ -110,9 +110,7 @@ Jahr[2000 .. 2005].monat(5..7).value  # returns the result of the month-attribut
 
 Jahr[2000].monat(4, 7).tag(4, 15,24 ).datum  # adresses methods or attributes of the specified day's
  => [["4.4.2000", "15.4.2000", "24.4.2000"], ["4.7.2000", "15.7.2000", "24.7.2000"]] 
- ## unfortunatly »Jahr[2000 .. 2015].monat( 3,5 ).tag( 4 ..6 ).datum « does not fits now
- ## instead »Jahr[2000..2015].map{|y| y.monat( 3,5 ).tag( 4 ..6 ).datum } « does the job.
-```
+ ``
 
 To filter datasets in that way, anything represented is queried from the database. In contrast to
 a pure ruby implementation, this works for small and large grid's.
@@ -138,7 +136,12 @@ Tag[1].last.datum
  => "1.11.2050"
  ## however, 
 Jahr[2050].monat(12).tag(1)  # exists:
-=> [["1.12.2050"]]
+=> ["1.12.2050"]
+
+TG::Jahr[2000..2002].monat(4,12).tag(1..4).datum.flatten
+=>  [Sat, 01 Apr 2000, Sun, 02 Apr 2000, Mon, 03 Apr 2000, Tue, 04 Apr 2000, Fri, 01 Dec 2000, Sat, 02 Dec 2000, Sun, 03 Dec 2000, Mon, 04 Dec 2000, 
+    Sun, 01 Apr 2001, Mon, 02 Apr 2001, Tue, 03 Apr 2001, Wed, 04 Apr 2001, Sat, 01 Dec 2001, Sun, 02 Dec 2001, Mon, 03 Dec 2001, Tue, 04 Dec 2001, 
+    Mon, 01 Apr 2002, Tue, 02 Apr 2002, Wed, 03 Apr 2002, Thu, 04 Apr 2002, Sun, 01 Dec 2002, Mon, 02 Dec 2002, Tue, 03 Dec 2002, Wed, 04 Dec 2002] 
 ```
 
 ## Horizontal Connections
@@ -150,7 +153,7 @@ On the TG::TimeBase-Level a method »environment« is implemented, that gathers 
 via traverse.
 
 ``` ruby
-start =  TG::Jahr[2000].monat(4).tag(7).first.first
+start =  "7.4.2000".to_tg
 start.environment(3).datum
  => ["4.4.2000", "5.4.2000", "6.4.2000", "7.4.2000", "8.4.2000", "9.4.2000", "10.4.2000"] 
 
@@ -159,6 +162,8 @@ start.environment(3).datum
  
 start.environment(0,3).datum
  => ["7.4.2000", "8.4.2000", "9.4.2000", "10.4.2000"] 
+ 
+ 
 ```
 
 ## Assigning Events
@@ -178,7 +183,7 @@ to the grid:
 assuming the record is read as string, then assigning is straightforward:
 ``` ruby
   ticker, date, open, high, low, close, volume, oi = record.split(',')
-  date.to_tg.assign vertex: Ticker.new(  high: high, ..), through: OHLC_TO, attributes:{ symbol: ticker }
+  date.to_tg.assign vertex: Ticker.new(  high: high, ..), via: OHLC_TO, attributes:{ symbol: ticker }
 ``` 
 The updated TimeBase-Object is returned. 
 
@@ -190,20 +195,20 @@ lets create a simple diary
 ```ruby
 include TG
 TimeGraph.populate 2016
-ORD.create_vertex_class :termin
+V.create_class :termin
  => Termin
-ORD.create_edge_class   :date_of
+E.create_class   :date_of
  => DATE_OF
 DATE_OF.uniq_index	# put contrains to the edge-class, accept only one entry per item 
 
-DATE_OF.create from: Monat[8].tag(9).stunde(12), 
-	       to: Termin.create( short: 'Mittagessen', 
-				  long: 'Schweinshaxen essen mit Lieschen Müller', 
-				  location: 'Hofbauhaus, München' )
+Monat[8].tag(9).stunde(12).assign vertex: Termin.create( short: 'Mittagessen', 
+			                         	 long: 'Schweinshaxen essen mit Lieschen Müller', 
+				                         location: 'Hofbauhaus, München' ),
+				  via: DATE_OF
  => #<DATE_OF:0x0000000334e038 (..) @attributes={"out"=>"#21:57", "in"=>"#41:0", (..)}> 
-# create some regular events
+# create some regular events  using Edge.create 
 # attach breakfirst at 9 o clock from the 10th to the 21st Day in the current month
-DATE_OF.create from: Monat[8].tag(10 .. 21).stunde( 9 ), to: Termin.create( :short => 'Frühstück' )
+DATE_OF.create from: Monat[8].tag( 10 .. 21 ).stunde( 9 ), to: Termin.create( :short => 'Frühstück' )
  => #<DATE_OF:0x000000028d5688 @metadata={(..) "cluster"=>45, "record"=>8}, 
 			      @attributes={"out"=>"#22:188", "in"=>"#42:0",(..)}>
 
