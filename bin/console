@@ -4,9 +4,30 @@
 ## Parameter:  production (p)
 ##	       development (d)  [default]
 ##	       test (t)
+require 'bundler/setup'
+require_relative '../lib/orientdb_time_graph'
+require_relative '../lib/setup'
 require 'logger'
+require 'pastel'
 LogLevel = Logger::INFO
-require File.expand_path(File.dirname(__FILE__) + "/../config/boot")
+
+p =  Pastel.new
+c =  p.bright_white.bold.on_yellow.detach
+g =  p.green.on_black.detach
+
+#require File.expand_path(File.dirname(__FILE__) + "/../config/boot")
+
+specified_environment = ARGV[0] || 'D'
+env =  case specified_environment[-1].upcase
+				 when  'P'
+					 :production
+				 when 'D'
+					 :development
+				 else
+					 :test
+				 end
+module TG; end
+TG.setup env
 
 #TG.check_and_initialize ORD
   
@@ -28,11 +49,6 @@ class Array
 end # Array
 
 
-
-
-puts "ORD points to the REST-Instance, Database: #{ActiveOrient.database}"
-puts "DB is the API-Instance of the database, DB.db gets the DB-Api-base " if RUBY_PLATFORM == 'java'
-
 puts '-'* 45
 ns= case ActiveOrient::Model.namespace 
   when Object
@@ -43,7 +59,7 @@ ns= case ActiveOrient::Model.namespace
 puts "Namespace for model-classes : #{ns}"
 puts "Present Classes (Hierarchy) "
 
-puts ORD.class_hierarchy.to_yaml
+puts V.db.class_hierarchy.to_yaml
 puts ActiveOrient::show_classes
 
 include OrientDB

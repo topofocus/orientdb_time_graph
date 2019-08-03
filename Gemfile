@@ -1,10 +1,9 @@
 source "https://rubygems.org"
 #gemspec
 ## jruby support is experimental, not tested jet
-gem 'orientdb' , :git => 'git://github.com/topofocus/orientdb-jruby.git' , :platforms => :jruby
- 
-gem 'active-orient' , :git => 'git://github.com/topofocus/active-orient.git'
-
+#gem 'orientdb' , :git => 'git://github.com/topofocus/orientdb-jruby.git' , :platforms => :jruby
+gem 'active-orient' , path: '../activeorient/' # :git => 'git://github.com/topofocus/active-orient.git'
+gem 'pastel'
 
 group :development, :test do
 	gem "awesome_print"

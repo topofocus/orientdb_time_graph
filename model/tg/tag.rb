@@ -1,7 +1,7 @@
 #ActiveOrient::Model.orientdb_class name: 'time_base', superclass: 'V'
 class  TG::Tag # < TG::TimeBase
-	def monat
-		in_tg_day_of.out.value_string.first
+	def _monat
+		query.nodes :in, via: TG::DAY_OF
 	end
 
 	def die_stunde h
@@ -12,19 +12,21 @@ class  TG::Tag # < TG::TimeBase
 		if key.empty?
 			out_tg_time_of.in
 		else
-			q = OrientSupport::OrientQuery.new
-			q.nodes :out, TG::TIME_OF, condition: { value: key } 
-			query q
-			#    query( "select  expand (out_tg_time_of.in[#{db.generate_sql_list 'value' => key.analyse}]) from #{rrid}  ")
+			key=  key.first		if key.is_a?(Array) && key.size == 1 
+			nodes( :out, via: TG::TIME_OF, where: { value: key } ).execute
 		end
 	end
 
 
   def monat
-    in_tg_day_of.out.first
+		_monat.execute.first
+#    in_tg_day_of.out.first
   end
 
   def datum
+		# three queries are fired
+		# todo
+		# formulate a match query providing anythin in just one query
     m = monat
      Date.new m.jahr.value, m.value, value #   "#{ value}.#{m.value}.#{m.jahr.value}"
   end
@@ -55,8 +57,7 @@ class  TG::Tag # < TG::TimeBase
 		w.nodes :out, via: TG::MONTH_OF, where: { value: datum.month }
 		x = OrientSupport::OrientQuery.new  from: w 
 		x.nodes :out, via: TG::DAY_OF, where: { value: datum.day }
-		
-		query_database( x,  &b).first 
+		x.execute.first
 	end
 
 end

@@ -10,10 +10,10 @@ Examples
   def self.[] *key
 #    result = OrientSupport::Array.new( work_on: self, 
 #						work_with: db.execute{ "select from #{ref_name} #{db.compose_where( value: key.analyse)}" } )
- 
-		q= OrientSupport::OrientQuery.new where:{ value: key.analyse }
-		result= query_database q
-		result.size == 1 ? result.first : result # return object if only one record is fetched
+		key=  key.first		if key.is_a?(Array) && key.size == 1 
+		q= query.where( value: key).execute(reduce: true)
+#		result= query_database q
+#		result.size == 1 ? result.first : result # return object if only one record is fetched
   end
 
 =begin

@@ -2,7 +2,7 @@ require 'active-orient'
 require_relative 'time_graph.rb'
 require_relative 'support.rb'
 
-require_relative '../config/init_db'
+require_relative 'init_db'
 
 
 
@@ -20,14 +20,10 @@ module TG
     ActiveOrient.default_server= { user: c[:user], password: c[:password] ,
 				   server: c[:server], port: c[:port]  }
     ActiveOrient.database = c[:database]
-    logger =  Logger.new '/dev/stdout'
-    ActiveOrient::Base.logger =  logger 
-    ActiveOrient::OrientDB.logger = logger 
   end
-  def self.connect login =  nil
+  def self.connect **login
     project_root = File.expand_path('../..', __FILE__)
-
-    set_defaults(login) if ActiveOrient::Base.logger.nil? 
+    set_defaults(login) 
     ActiveOrient::Init.define_namespace { TG } 
     ActiveOrient::Model.model_dir =  "#{project_root}/model"
     ActiveOrient::OrientDB.new  preallocate: true  # connect via http-rest

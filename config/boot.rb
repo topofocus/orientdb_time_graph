@@ -1,3 +1,17 @@
+#  ########################  Outdated  ##################
+#
+#  do not use anymore
+#
+#  instead  
+#  require  lib/setup 
+#  and include 
+#  TG.setup environment in the startup-script
+#  with environment = :test, :development, :production
+#
+#
+#
+#
+#
 ### Parameter: ARGV  (Array, argument from the command  line)
 ### t)test
 ### d)velopement

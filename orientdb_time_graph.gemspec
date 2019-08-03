@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.bindir        = "exe"
   s.executables   = s.files.grep(%r{^exe/}) { |f| File.basename(f) }
    
-  s.add_development_dependency "bundler", "~> 1.8"
+  s.add_development_dependency "bundler"
   s.add_dependency 'active-orient', "~> 0.6"
 
 end

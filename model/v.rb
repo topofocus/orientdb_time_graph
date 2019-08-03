@@ -75,4 +75,9 @@ i.e.
 	def datum
 		nodes( :in, via: /has/ ).first.datum
 	end
+
+
+	def to_tg
+		nodes( :in, via: /has/ ).first
+	end
 end

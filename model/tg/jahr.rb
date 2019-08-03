@@ -8,13 +8,15 @@ class TG::Jahr #< TG::TimeBase
   # thus enables the use as  
   #   Monat[9].tag[9]
   def monat  *key
-    if key.empty?
-    out_tg_month_of.in
-    else
-		#	out_tg_month_of[key].in
-    query( "select  expand (out_tg_month_of.in[#{db.generate_sql_list 'value' => key.analyse}]) from #{rrid}  ")
-    end
+		if key.blank?
+			out_tg_month_of.in
+		else
+			key=  key.first		if key.is_a?(Array) && key.size == 1 
+			#	out_tg_month_of[key].in
+			nodes( :out, via: /month/ , where: { value: key } )
+		end
   end
 
+    
   end
 
