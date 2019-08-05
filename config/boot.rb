@@ -6,7 +6,9 @@
 #  require  lib/setup 
 #  and include 
 #  TG.setup environment in the startup-script
-#  with environment = :test, :development, :production
+#     with environment = :test, :development, :production
+#  followed by
+#  TG.connect
 #
 #
 #

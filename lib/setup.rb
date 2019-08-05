@@ -10,16 +10,20 @@ require_relative "init_db"
 
 module TG 
 
+	## Standalone setup 
+	##  
+	## initializes ActiveOrient and adds time-graph database-classes
+	## through namespace TG
 	def self.setup environment = :test
 
 	 project_root = File.expand_path('../..', __FILE__)
 	 connect_file = project_root +'/config/connect.yml'
 
 	 databaseyml   = YAML.load_file( connect_file )[:orientdb][:database]
-	 admin_credetials = YAML.load_file(connect_file)[:orientdb][:admin]
+	 admin_credentials = YAML.load_file(connect_file)[:orientdb][:admin]
 	 logon =  { database: databaseyml[environment],
-		 user: admin_credetials[:user],
-		 password: admin_credetials[:pass],
+		 user: admin_credentials[:user],
+		 password: admin_credentials[:pass],
 		 server:  YAML.load_file( connect_file )[:orientdb][:server] }
 
 	 ActiveOrient::Init.connect  logon
@@ -31,5 +35,26 @@ module TG
 	 end
 
 	 ActiveOrient::Model.model_dir =  project_root + '/model'
+	end
+
+
+
+  def self.connect **login
+    project_root = File.expand_path('../..', __FILE__)
+    set_defaults(login) unless ActiveOrient.default_server.is_a?(Hash) && ActiveOrient.default_server[:user].present?
+    ActiveOrient::Init.define_namespace { TG } 
+    ActiveOrient::Model.model_dir =  "#{project_root}/model"
+    ActiveOrient::OrientDB.new  preallocate: true  # connect via http-rest
+  end
+
+  def self.check_and_initialize database_instance
+    if database_instance.get_classes( "name").values.flatten.include? 'time_base'
+      return true
+    else
+      TG::Setup.init_database database_instance
+      puts "Database-Structure allocated"
+      puts "Exiting now, please restart and call »TG::TimeGraph.populate«"
+      Kernel.exit
+    end
 	end
 end

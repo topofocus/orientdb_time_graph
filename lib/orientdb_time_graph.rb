@@ -8,8 +8,13 @@ require_relative 'init_db'
 
 module TG
 
+	# completes the parameter for calling ActiveOrient::Init.connect
+	# 
+	# Is called from connect only if ActiveOrient.default_server is not set previously
+	# 
+	# otherwise the credentials from the main-activeorient-instance are used.
   def self.set_defaults  login =  nil
-    c = { :server => 'localhost',
+    c = { :server =>  'localhost',
 	  :port   => 2480,
 	  :protocol => 'http',
 	  :user    => 'root',
@@ -21,26 +26,7 @@ module TG
 				   server: c[:server], port: c[:port]  }
     ActiveOrient.database = c[:database]
   end
-  def self.connect **login
-    project_root = File.expand_path('../..', __FILE__)
-    set_defaults(login) 
-    ActiveOrient::Init.define_namespace { TG } 
-    ActiveOrient::Model.model_dir =  "#{project_root}/model"
-    ActiveOrient::OrientDB.new  preallocate: true  # connect via http-rest
-  end
 
-  def self.check_and_initialize database_instance
-    if database_instance.get_classes( "name").values.flatten.include? 'time_base'
-      return true
-    else
-      TG::Setup.init_database database_instance
-      puts "Database-Structure allocated"
-      puts "Exiting now, please restart and call »TG::TimeGraph.populate«"
-      Kernel.exit
-    end
-
-
-  end
 
   def self.info 
     puts "-------------- TIME GRAPH ------------------"

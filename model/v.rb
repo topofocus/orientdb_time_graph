@@ -27,8 +27,6 @@ class V
   	#    start = the_asset.at("1.1.2000")
   	#    
 		#    start.vector(10) 
-	  #   
-	 #		start.vector(10, to_time_grid: 2.week.since(start.datum))
 	  #
 		#    start.vector(10, function: :median){"mean" } 
 		#
