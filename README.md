@@ -168,11 +168,10 @@ start.environment(0,3).datum
 
 ## Assigning Events
 
-To assign something to the TimeGrid one has just to create an edge-class and connect this »something», 
-which is represented as Vertex to the grid. The Diary example below describes how to do it from
-the viewpoint of the edge.
+To assign something to the TimeGrid its sufficiant to create an edge-class and connect this »something», 
+which is represented as Vertex, to the grid. The Diary example below describes how to do it.
 
-However, if you want to assign something like a csv with a »date« column, it's easier to assin it directly 
+However, if a csv-file  with a »date« column is present, it's easier to assign it directly 
 to the grid:
 
 ``` ruby
