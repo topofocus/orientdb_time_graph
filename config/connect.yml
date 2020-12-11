@@ -1,17 +1,21 @@
 ---
 :orientdb:
- :server: localhost # 172.28.50.109 # localhost   #mailout.halfgarten-capital.de
- :port: 2480
- :logger: stdout           # 'file' or 'stdout'
- :database: 
-   :production: time_production
-   :development: time_dev
-   :test: tempera
- :admin:
+  :production:
+   :server: 172.28.50.25  # localhost
+   :user:  hctw
+   :password: a***k 
+   :database: o
+  :test:
+   :server: 10.222.148.109
    :user: hctw
-   :pass: hc
- :auth:
-   :user: topo
-   :pass: focus
+   :password: s*p**
+   :database: test
+  :development:
+   :server: 10.222.148.109
+   :user: hctw
+   :password: s*p**
+   :database: demo
+:port: 2480
+:logger: stdout           # 'file' or 'stdout'
 
 # hfx: 101
