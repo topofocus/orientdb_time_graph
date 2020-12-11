@@ -34,8 +34,12 @@ module TG
 		# a provided block is used to introduce additional locations of model-files
 		the_model_dirs = block_given? ? [ "#{project_root}/model", yield].flatten :  [ "#{project_root}/model" ]
 			ActiveOrient::OrientDB.new  preallocate: true, model_dir: the_model_dirs
+			@time_graph = TG::TIME_OF.count > 0
   end
 
+	def self.time_graph?
+		@time_graph
+	end
   def self.check_and_initialize database_instance
     if database_instance.get_classes( "name").values.flatten.include? 'time_base'
       return true

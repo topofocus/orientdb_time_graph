@@ -21,7 +21,7 @@ end
 
 class DateTime
   def to_tg
-    if TG::TIME_OF.count >0 
+    if TG.time_graph? 
       TG::Monat[month].tag(day).stunde(hour).pop.pop
     else
 		TG::Tag.fetch self
