@@ -33,8 +33,8 @@ module TG
     ActiveOrient::Init.define_namespace { TG } 
 		# a provided block is used to introduce additional locations of model-files
 		the_model_dirs = block_given? ? [ "#{project_root}/model", yield].flatten :  [ "#{project_root}/model" ]
-			ActiveOrient::OrientDB.new  preallocate: true, model_dir: the_model_dirs
-			@time_graph = TG::TIME_OF.count > 0
+		ActiveOrient::OrientDB.new  preallocate: true, model_dir: the_model_dirs
+		@time_graph = TG.const_defined?(:TIME_OF) ? TG::TIME_OF.count > 0 : nil
   end
 
 	def self.time_graph?
