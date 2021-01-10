@@ -78,7 +78,7 @@ It returns an  OrientSupport::Array of TG::TimeBase-Objects
 #
 
   def environment previous_items = 10, next_items = nil
-    _environment(prevopus_items, next_items).execute
+    _environment(previous_items, next_items).execute
 	end
 
   def _environment previous_items, next_items = nil
